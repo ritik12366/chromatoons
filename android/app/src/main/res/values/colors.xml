@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ct_background">#12141C</color>
+    <color name="ct_surface">#1C202C</color>
+    <color name="ct_accent">#FF6B35</color>
+</resources>

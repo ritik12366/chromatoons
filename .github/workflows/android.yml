@@ -1,0 +1,76 @@
+name: Build Android APK
+
+# Builds the free "Chroma Toons App" release APK from the plain Android
+# WebView wrapper in android/ (which packages the web app from www/).
+#
+# There is NO Unity here: no game-ci, no UNITY_LICENSE secret, no scanner.
+# Just JDK 17 + Gradle on a normal ubuntu runner.
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Assemble release APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      # --- Validate the web app (fails fast if a JS file has a syntax error) ---
+      - name: Syntax-check web scripts
+        run: |
+          fail=0
+          for f in $(find www/scripts -name '*.js' | sort); do
+            if ! node --check "$f"; then
+              echo "::error file=$f::JavaScript syntax error"
+              fail=1
+            fi
+          done
+          node -e "JSON.parse(require('fs').readFileSync('www/manifest.webmanifest','utf8'))" \
+            || { echo "::error::manifest.webmanifest is not valid JSON"; fail=1; }
+          exit $fail
+
+      # Make the repo self-contained: generate the wrapper (gradlew + jar).
+      - name: Generate Gradle wrapper
+        working-directory: android
+        run: gradle wrapper --gradle-version 8.7
+
+      - name: Build release APK
+        working-directory: android
+        run: ./gradlew --no-daemon assembleRelease
+
+      - name: Show APK output
+        run: ls -lh android/app/build/outputs/apk/release/ || true
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: chromatoons-apk
+          path: android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+          retention-days: 30

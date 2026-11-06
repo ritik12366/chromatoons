@@ -1,0 +1,54 @@
+plugins {
+    id 'com.android.application'
+}
+
+// Copy the shared web app (www/) into the APK assets so the WebView can load it.
+def webRoot = rootProject.file('../www')
+def wwwOut = file("$buildDir/generated/www")
+
+tasks.register('syncWebApp', Sync) {
+    from webRoot
+    into wwwOut
+}
+tasks.named('preBuild') { dependsOn 'syncWebApp' }
+
+android {
+    namespace 'com.chromatoons.app'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'bhootiyadreamstv.moboapp.chromatoons'
+        minSdk 24
+        targetSdk 34
+        versionCode 187
+        versionName '174'
+    }
+
+    sourceSets {
+        main {
+            assets.srcDirs += wwwOut
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled false
+            // Ships installable out of the box by reusing the debug keystore.
+            // Create your own keystore for a public release (see docs/BUILD.md).
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.webkit:webkit:1.11.0'
+}

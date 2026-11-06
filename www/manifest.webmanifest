@@ -1,0 +1,16 @@
+{
+  "name": "Chroma Toons App",
+  "short_name": "Chroma Toons",
+  "id": "bhootiyadreamstv.moboapp.chromatoons",
+  "description": "Free 2D character animation studio: create characters, animate, record.",
+  "start_url": "index.html",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#12141c",
+  "theme_color": "#12141c",
+  "categories": ["entertainment", "graphics", "productivity"],
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

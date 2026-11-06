@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#12141c" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="color-scheme" content="dark" />
+  <title>Chroma Toons App</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/icon.svg" />
+  <link rel="stylesheet" href="styles/app.css" />
+</head>
+<body>
+  <div id="app">
+    <header id="header" class="header">
+      <span id="header-title" class="header__title">Chroma Toons App</span>
+      <span id="header-badge" class="header__badge">FREE</span>
+    </header>
+
+    <main id="panel-host" class="panel-host"></main>
+
+    <nav id="nav" class="nav" aria-label="Main navigation"></nav>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <!-- core -->
+  <script src="scripts/core.js"></script>
+  <script src="scripts/store.js"></script>
+  <script src="scripts/studio.js"></script>
+  <script src="scripts/animator.js"></script>
+  <script src="scripts/recorder.js"></script>
+  <script src="scripts/creator.js"></script>
+  <script src="scripts/rigging.js"></script>
+  <script src="scripts/audio.js"></script>
+  <script src="scripts/effects.js"></script>
+  <script src="scripts/camera.js"></script>
+
+  <!-- ui -->
+  <script src="scripts/ui.js"></script>
+  <script src="scripts/stage.js"></script>
+
+  <!-- panels -->
+  <script src="scripts/panels/home.js"></script>
+  <script src="scripts/panels/characters.js"></script>
+  <script src="scripts/panels/creator.js"></script>
+  <script src="scripts/panels/timeline.js"></script>
+  <script src="scripts/panels/animate.js"></script>
+  <script src="scripts/panels/recording.js"></script>
+  <script src="scripts/panels/gallery.js"></script>
+  <script src="scripts/panels/blog.js"></script>
+  <script src="scripts/panels/premium.js"></script>
+  <script src="scripts/panels/settings.js"></script>
+  <script src="scripts/panels/help.js"></script>
+
+  <!-- bootstrap -->
+  <script src="scripts/app.js"></script>
+  <!-- Android wrapper supplies window.ChromaNative; ignored in a plain browser -->
+</body>
+</html>

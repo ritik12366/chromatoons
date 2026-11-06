@@ -1,0 +1,5 @@
+// Root build script. The app module is the plain Android WebView wrapper that
+// loads the web app from www/ (copied into the APK as an asset).
+plugins {
+    id 'com.android.application' version '8.5.2' apply false
+}

@@ -67,6 +67,11 @@ The old project was backed up to
   localStorage, exportable/importable from the Timeline panel.
 - **Localization:** kept en/hi; only the tables carried over so far (some panels
   still show English strings).
+- **Built-in content (new, this build):** `characters-lib.js` draws 7 ready-to-use
+  characters as SVG data URLs at runtime, and `anim-lib.js` ships 11 procedural
+  animation clips (idle/walk/run/jump/wave/dance/talk/punch/kick/anger/sleep)
+  that drive the rig through `AnimationStudio`, and can be baked into real
+  timeline keyframes. Both are offline-only — no assets to download, no network.
 
 ## Preserved exactly
 
@@ -79,7 +84,8 @@ The old project was backed up to
 ## Not ported / differences
 
 - **DragonBones mesh rigs and the original premium character art are not
-  copied** — this is a clean‑room rebuild. Users import their own PNGs.
+  copied** — this is a clean-room rebuild. The 7 built-in SVG characters are
+  original art written for this build; users can still import their own PNGs.
 - The Unity‑specific editor tooling (`Assets/Editor/*`), `tools/build-termux.sh`
   for Unity, and the game‑ci workflow are gone; replaced by the web build and
   `.github/workflows/android.yml`.

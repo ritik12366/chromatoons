@@ -7,6 +7,43 @@
   function render(el) {
     var store = C.CharacterStore;
 
+    /* ---- built-in characters (offline, drawn as SVG) ---- */
+    el.appendChild(C.UI.sectionTitle('Built-in Characters'));
+    var libRow = h('div', { class: 'chip-row' });
+    el.appendChild(libRow);
+    el.appendChild(C.UI.row([
+      C.UI.button('Add All Characters', 'btn--accent2', function () {
+        if (!C.CharactersLib) { C.EventBus.emit('toast', 'Character library missing'); return; }
+        C.CharactersLib.addAll();
+        paintLib();
+        refresh();
+      })
+    ]));
+    el.appendChild(h('div', { style: { height: '14px' } }));
+
+    function paintLib() {
+      var have = {};
+      store.all().forEach(function (c) { if (c.builtin) have[c.builtin] = true; });
+      libRow.innerHTML = '';
+      (C.CharactersLib ? C.CharactersLib.BUILTINS : []).forEach(function (b) {
+        var on = !!have['builtin:' + b.id];
+        libRow.appendChild(C.UI.chip((b.emoji || '') + ' ' + b.label, on, function () {
+          if (on) {
+            C.EventBus.emit('toast', b.label + ' already in your library');
+            return;
+          }
+          var c = C.CharactersLib.addBuiltin(b.id);
+          if (c) {
+            C.EventBus.emit('toast', "Added '" + c.name + "'");
+            C.EventBus.emit('characters:changed');
+            paintLib();
+            refresh();
+          }
+        }));
+      });
+    }
+
+    el.appendChild(C.UI.sectionTitle('Your Characters'));
     el.appendChild(h('input', {
       class: 'input', type: 'file', accept: 'image/*',
       onchange: function (e) { importInto(null, e.target.files[0], e.target); }
@@ -28,6 +65,7 @@
     el.appendChild(list);
 
     function refresh() {
+      paintLib();
       list.innerHTML = '';
       var chars = store.all();
       if (!chars.length) { list.appendChild(C.UI.empty('No characters yet. Create one above.')); return; }

@@ -13,6 +13,51 @@
     status.style.margin = '8px 0';
     el.appendChild(status);
 
+    /* ---- ready-made animations ---- */
+    el.appendChild(C.UI.sectionTitle('Animations'));
+    var clipRow = h('div', { class: 'chip-row' });
+    if (C.AnimationLib) {
+      C.AnimationLib.clips.forEach(function (clip) {
+        clipRow.appendChild(C.UI.chip((clip.emoji || '') + ' ' + clip.label, false, function () {
+          if (C.AnimationLib.active && C.AnimationLib.active.id === clip.id) {
+            C.AnimationLib.stop();
+            C.EventBus.emit('toast', 'Stopped ' + clip.label);
+            paintClips();
+            return;
+          }
+          C.AnimationLib.start(clip.id);
+          C.EventBus.emit('toast', 'Playing ' + clip.label);
+          paintClips();
+        }));
+      });
+    }
+    el.appendChild(clipRow);
+    el.appendChild(C.UI.row([
+      C.UI.button('Stop Animation', '', function () {
+        if (C.AnimationLib) C.AnimationLib.stop();
+        paintClips();
+      }),
+      C.UI.button('Bake To Keyframes', 'btn--accent2', function () {
+        if (!C.AnimationLib || !C.AnimationLib.active) {
+          C.EventBus.emit('toast', 'Play an animation first');
+          return;
+        }
+        var id = C.AnimationLib.active.id;
+        var n = C.AnimationLib.bake(id);
+        C.AnimationLib.stop();
+        C.EventBus.emit('toast', 'Baked ' + n + ' keyframes → Timeline');
+        paintClips();
+      })
+    ]));
+
+    function paintClips() {
+      var activeId = C.AnimationLib && C.AnimationLib.active ? C.AnimationLib.active.id : null;
+      Array.prototype.slice.call(clipRow.children).forEach(function (chip, i) {
+        chip.classList.toggle('is-on', C.AnimationLib.clips[i].id === activeId);
+      });
+    }
+    paintClips();
+
     var pose = C.AnimationStudio.pose;
     var selected = 'torso';
     var drag = null;
@@ -27,6 +72,7 @@
         C.EventBus.emit('toast', 'Keyframe @ ' + f);
       }),
       C.UI.button('Reset Pose', '', function () {
+        if (C.AnimationLib && C.AnimationLib.active) { C.AnimationLib.stop(); paintClips(); }
         C.BONES.forEach(function (b) { C.AnimationStudio.pose[b] = C.defaultPose(); });
         C.EventBus.emit('toast', 'Pose reset');
       })
@@ -86,6 +132,8 @@
     canvas.addEventListener('pointerdown', function (e) {
       var hit = stage.animator.nearestBone(e.clientX, e.clientY, pose);
       if (!hit.bone) return;
+      /* manual posing takes over from a running clip */
+      if (C.AnimationLib && C.AnimationLib.active) { C.AnimationLib.stop(); paintClips(); }
       selected = hit.bone;
       drag = { bone: hit.bone, last: { x: e.clientX, y: e.clientY } };
       buildChips();

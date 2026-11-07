@@ -75,6 +75,36 @@ Panels also reachable from Home / Settings:
 
 ---
 
+## Built-in characters & animations (works offline)
+
+Nothing has to be downloaded or imported — the APK already contains everything.
+
+**7 built-in characters** (`www/scripts/characters-lib.js`) are drawn on the fly
+as SVG data URLs, so they work in the APK with no network:
+
+`Toon Boy` `Toon Girl` `Robot` `Tom Cat` `Ninja` `Alien` `Ghost`
+
+Open **Characters → Built-in Characters** and tap one (or *Add All Characters*).
+Each one is a normal character entry with a 240×360 sprite, so it can be placed
+in the scene, re-coloured in the Creator, or replaced with your own image at any
+time.
+
+**11 ready-made animations** (`www/scripts/anim-lib.js`) play live on the rig —
+open **Animate → Animations**:
+
+| Clip | Length | Clip | Length | Clip | Length |
+|------|--------|------|--------|------|--------|
+| 🧍 Idle | 2.0 s | 🚶 Walk | 1.3 s | 🏃 Run | 0.8 s |
+| 🦘 Jump | 1.5 s | 👋 Wave | 1.3 s | 💃 Dance | 2.0 s |
+| 🗣️ Talk | 1.5 s | 🥊 Punch | 1.0 s | 🦵 Kick | 1.1 s |
+| 😠 Angry | 1.3 s | 😴 Sleep | 3.0 s | | |
+
+Tap a clip to loop it, **Stop Animation** to return to your own pose, or
+**Bake To Keyframes** to convert the clip into a real timeline you can edit,
+scrub, save and export frame by frame.
+
+---
+
 ## Build the APK
 
 You **cannot** build on this phone (no JDK/Gradle/Android SDK). Use one of:
@@ -95,5 +125,7 @@ The mapping from the old Unity code to the new modules is in
 ## Not included
 
 - The original app's DragonBones rigs / premium character art are **not** copied
-  (this is a clean‑room rebuild). Import your own images from the Characters tab.
+  (this is a clean-room rebuild) — the 7 built-in SVG characters are original
+  art made for this build. Import your own images from the Characters tab any
+  time.
 - No ads, no analytics, no billing SDKs — by design.

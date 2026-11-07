@@ -59,6 +59,10 @@
         }
       }
       this._renderPose();
+      /* a ready-made clip overrides the pose while it is playing */
+      if (C.AnimationLib && C.AnimationLib.active) {
+        C.AnimationLib.step(Math.min(delta, 0.1));
+      }
       this._notify();
       this._raf = requestAnimationFrame(this._tick);
     },

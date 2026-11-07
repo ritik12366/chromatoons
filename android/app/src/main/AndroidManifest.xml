@@ -21,18 +21,15 @@
         android:label="Chroma Toons App"
         android:theme="@style/Theme.ChromaToons"
         android:hardwareAccelerated="true"
-        android:appCategory="game"
+        android:usesCleartextTraffic="true"
         android:supportsRtl="true">
 
+        <!-- Dependency-free provider so the gallery can share an ACTION_VIEW uri -->
         <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.fileprovider"
+            android:name=".MediaProvider"
+            android:authorities="${applicationId}.files"
             android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
+            android:grantUriPermissions="true" />
 
         <activity
             android:name=".MainActivity"

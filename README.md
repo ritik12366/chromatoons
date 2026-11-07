@@ -24,11 +24,15 @@ docs/     build + port notes
 tools/    helper scripts (Termux one‑shot cloud build)
 ```
 
-The `android/` module copies `www/` into the APK as an asset at build time
-(Gradle task `syncWebApp`), loads it through `WebViewAssetLoader` at
-`https://appassets.androidplatform.net/assets/index.html`, and exposes a small
-`ChromaNative` JS bridge for saving files, listing the gallery, mic permission
-and app exit. In a normal browser the app runs as-is (the bridge is optional).
+The `android/` module packages `www/` into the APK as an asset
+(`assets.srcDirs += ../www`, no copy task) and serves it from a tiny built-in
+HTTP server on `http://127.0.0.1:<random>/`, so the page runs from a real
+`http://` origin and `fetch`/storage/media all work. A small `ChromaNative`
+JS bridge handles saving files, listing the gallery, the mic permission and
+app exit. There are **no third-party dependencies** (no AndroidX) — the app
+targets the platform SDK only, so the build never needs to download anything
+beyond Gradle + the Android SDK itself. In a normal browser the app runs as-is
+(the bridge is optional).
 
 ---
 

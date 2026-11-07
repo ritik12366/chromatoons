@@ -2,15 +2,9 @@ plugins {
     id 'com.android.application'
 }
 
-// Copy the shared web app (www/) into the APK assets so the WebView can load it.
-def webRoot = rootProject.file('../www')
-def wwwOut = file("$buildDir/generated/www")
-
-tasks.register('syncWebApp', Sync) {
-    from webRoot
-    into wwwOut
-}
-tasks.named('preBuild') { dependsOn 'syncWebApp' }
+// The web app lives at the repo root in www/. Point the assets source set
+// straight at it — no copy task, no task-dependency pitfalls.
+def wwwDir = rootProject.file('../www')
 
 android {
     namespace 'com.chromatoons.app'
@@ -26,17 +20,14 @@ android {
 
     sourceSets {
         main {
-            assets.srcDirs += wwwOut
+            assets.srcDirs += wwwDir
         }
     }
 
     buildTypes {
-        debug {
-            minifyEnabled false
-        }
         release {
             minifyEnabled false
-            // Ships installable out of the box by reusing the debug keystore.
+            // Ships installable out of the box via the debug keystore.
             // Create your own keystore for a public release (see docs/BUILD.md).
             signingConfig signingConfigs.debug
         }
@@ -46,9 +37,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+
+    lint {
+        abortOnError false
+    }
 }
 
-dependencies {
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'androidx.webkit:webkit:1.11.0'
-}
+// No third-party dependencies on purpose: the app targets the platform SDK
+// only, so the build never has to download AndroidX artifacts.

@@ -36,6 +36,12 @@ jobs:
         with:
           packages: 'platform-tools'
 
+      - name: Install platform + build-tools 34
+        run: |
+          SDKMANAGER="$(command -v sdkmanager || echo "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager")"
+          yes | "$SDKMANAGER" --install "platforms;android-34" "build-tools;34.0.0" || true
+          echo "SDK platforms:"; ls "${ANDROID_HOME}/platforms" || true
+
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
@@ -62,7 +68,7 @@ jobs:
 
       - name: Build release APK
         working-directory: android
-        run: ./gradlew --no-daemon assembleRelease
+        run: ./gradlew --no-daemon --stacktrace assembleRelease
 
       - name: Show APK output
         run: ls -lh android/app/build/outputs/apk/release/ || true

@@ -91,6 +91,6 @@ Keep keystores out of git (already in `.gitignore`).
 |---|---|
 | `gradlew: not found` | run `gradle wrapper --gradle-version 8.7` in `android/` (CI does this automatically) |
 | Gradle/SDK version error | the workflow pins Gradle 8.7 + JDK 17; match those locally |
-| APK builds but page is blank | check that `www/index.html` and all `www/scripts/*.js` exist; the `syncWebApp` task copies the whole `www/` folder |
+| APK builds but page is blank | check that `www/index.html` and all `www/scripts/*.js` exist; `assets.srcDirs` points at the whole `www/` folder |
 | Mic doesn't record | first mic use triggers the Android runtime permission dialog (`MainActivity` requests `RECORD_AUDIO` before granting the WebView request). Tap **Allow**. |
 | "Recording not supported" | the device/WebView lacks `MediaRecorder`/`captureStream`; screenshots still work |
